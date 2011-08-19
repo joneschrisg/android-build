@@ -65,15 +65,15 @@ TARGET_arm_CFLAGS :=    -O2 \
 # non-thumb enabled targets are supported, this is treated
 # as a 'hint'. If thumb is not enabled, these files are just
 # compiled as ARM.
-#ifeq ($(ARCH_ARM_HAVE_THUMB_SUPPORT),true)
-#TARGET_thumb_CFLAGS :=  -mthumb \
-#                        -Os \
-#                        -fno-omit-frame-pointer \
-#                        -fno-strict-aliasing \
-#                        -finline-limit=64
-#else
+ifeq ($(ARCH_ARM_HAVE_THUMB_SUPPORT),true)
+TARGET_thumb_CFLAGS :=  -mthumb \
+                        -Os \
+                        -fno-omit-frame-pointer \
+                        -fno-strict-aliasing \
+                        -finline-limit=64
+else
 TARGET_thumb_CFLAGS := $(TARGET_arm_CFLAGS)
-#endif
+endif
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to force a full arm build, even for
@@ -84,7 +84,6 @@ TARGET_thumb_CFLAGS := $(TARGET_arm_CFLAGS)
 # of the libraries (libpv, libwebcore, libkjs) need to be built
 # with -mlong-calls.  When built at -O0, those libraries are
 # too big for a thumb "BL <label>" to go from one end to the other.
-FORCE_ARM_DEBUGGING:=true
 ifeq ($(FORCE_ARM_DEBUGGING),true)
   TARGET_arm_CFLAGS += -fno-omit-frame-pointer -fno-strict-aliasing
   TARGET_thumb_CFLAGS += -marm -fno-omit-frame-pointer
