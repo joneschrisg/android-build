@@ -58,7 +58,6 @@ PRODUCT_PACKAGES := \
     sqlite-jdbc \
     Browser \
     Contacts \
-    Home \
     HTMLViewer \
     Phone \
     ApplicationsProvider \
