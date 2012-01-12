@@ -202,8 +202,18 @@ ifdef LOCAL_UNINSTALLABLE_MODULE
     $(error $(LOCAL_PATH): Illegal use of LOCAL_UNINSTALLABLE_MODULE)
   endif
 else
-  LOCAL_INSTALLED_MODULE := $(LOCAL_MODULE_PATH)/$(LOCAL_MODULE_SUBDIR)$(LOCAL_INSTALLED_MODULE_STEM)
+  # B2G hackery: Prevent installing .jar and .apk modules on device
+  ifndef LOCAL_IS_HOST_MODULE
+     ifneq ($(strip $(filter $(LOCAL_MODULE_CLASS),APPS JAVA_LIBRARIES)),)
+        LOCAL_UNINSTALLABLE_MODULE=1
+     endif
+  endif
+  ifndef LOCAL_UNINSTALLABLE_MODULE
+    LOCAL_INSTALLED_MODULE := $(LOCAL_MODULE_PATH)/$(LOCAL_MODULE_SUBDIR)$(LOCAL_INSTALLED_MODULE_STEM)
+  endif
 endif
+
+
 
 # Assemble the list of targets to create PRIVATE_ variables for.
 LOCAL_INTERMEDIATE_TARGETS += $(LOCAL_BUILT_MODULE)
@@ -569,6 +579,10 @@ $(foreach tag,$(LOCAL_MODULE_TAGS),\
 ## NOTICE files
 ###########################################################
 
+# B2G hackery: notice_files.mk falls down when LOCAL_INSTALLED_MODULE
+#              is not defined for APPS
+ifeq ($(strip $(filter $(LOCAL_MODULE_CLASS),APPS)),)
 include $(BUILD_SYSTEM)/notice_files.mk
+endif
 
 #:vi noexpandtab
