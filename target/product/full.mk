@@ -41,7 +41,8 @@ PRODUCT_COPY_FILES := \
 
 # Pick up some sounds - stick with the short list to save space
 # on smaller devices.
-$(call inherit-product, frameworks/base/data/sounds/OriginalAudio.mk)
+# Don't need these ringtones on gonk
+# $(call inherit-product, frameworks/base/data/sounds/OriginalAudio.mk)
 
 # Get the TTS language packs
 $(call inherit-product-if-exists, external/svox/pico/lang/all_pico_languages.mk)
